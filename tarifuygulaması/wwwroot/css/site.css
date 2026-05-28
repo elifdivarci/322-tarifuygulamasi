@@ -205,3 +205,79 @@
     min-width: 20px;
     text-align: center;
 }
+
+.auth-kart {
+    background: white;
+    border-radius: 16px;
+    padding: 36px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.auth-btn {
+    background-color: #c0392b;
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: 600;
+    border: none;
+}
+
+.auth-btn:hover {
+    background-color: #a93226;
+    color: white;
+}
+
+.yorum-bolumu {
+    border-top: 2px solid #f0f0f0;
+    padding-top: 30px;
+}
+
+.yorum-btn {
+    background-color: #c0392b;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    padding: 8px 20px;
+}
+
+.yorum-btn:hover {
+    background-color: #a93226;
+    color: white;
+}
+
+.yorum-giris-uyari {
+    background: #fff8f8;
+    border: 1px solid #f5c6c6;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.yorum-kart {
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    border: 1px solid #f0f0f0;
+}
+
+.yorum-ust {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.yorum-kullanici {
+    font-weight: 700;
+    color: #c0392b;
+}
+
+.yorum-tarih {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+.yorum-icerik {
+    margin: 0;
+    color: #444;
+}

@@ -15,5 +15,6 @@ namespace tarifuygulaması.Models
         public Category Category { get; set; }
         public User User { get; set; }
         public ICollection<Ingredient> Ingredients { get; set; }
+        public ICollection<Comment> Comments { get; set; }
     }
 }

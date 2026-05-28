@@ -18,12 +18,36 @@ namespace tarifuygulaması.Controllers
             var tarif = await _context.Recipes
                 .Include(r => r.Category)
                 .Include(r => r.Ingredients)
+                .Include(r => r.Comments)
+                .ThenInclude(c => c.User)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (tarif == null)
                 return NotFound();
 
             return View(tarif);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> YorumEkle(int recipeId, string icerik)
+        {
+            if (HttpContext.Session.GetString("UserEmail") == null)
+                return RedirectToAction("Login", "Account");
+
+            if (!string.IsNullOrWhiteSpace(icerik))
+            {
+                var yorum = new tarifuygulaması.Models.Comment
+                {
+                    RecipeId = recipeId,
+                    UserId = (int)HttpContext.Session.GetInt32("UserId"),
+                    Icerik = icerik.Trim(),
+                    OlusturulmaTarihi = DateTime.Now
+                };
+                _context.Comments.Add(yorum);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Detail", new { id = recipeId });
         }
         public IActionResult Create()
         {

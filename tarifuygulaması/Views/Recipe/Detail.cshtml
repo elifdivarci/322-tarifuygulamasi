@@ -58,11 +58,54 @@
     </div>
 
 
+    
     <div class="col-md-6">
         <img src="@Model.GorselUrl" alt="@Model.Ad"
              onerror="this.src='/images/default.jpg'"
              class="tarif-detay-gorsel" />
     </div>
+
+</div>
+
+<div class="yorum-bolumu mt-5">
+    <h4 class="mb-4">💬 Yorumlar (@Model.Comments.Count)</h4>
+    
+    @if (Context.Session.GetString("UserEmail") != null)
+    {
+        <form method="post" asp-controller="Recipe" asp-action="YorumEkle" class="mb-4">
+            <input type="hidden" name="recipeId" value="@Model.Id" />
+            <div class="mb-2">
+                <textarea name="icerik" class="form-control" rows="3"
+                          placeholder="Yorumunuzu yazın..."></textarea>
+            </div>
+            <button type="submit" class="btn yorum-btn">Yorum Yap</button>
+        </form>
+    }
+    else
+    {
+        <div class="yorum-giris-uyari mb-4">
+            <p>Yorum yapmak için giriş yapmalısınız.</p>
+            <a asp-controller="Account" asp-action="Login" class="btn yorum-btn">Giriş Yap</a>
+        </div>
+    }
+    
+    @if (!Model.Comments.Any())
+    {
+        <p class="text-muted">Henüz yorum yapılmamış. İlk yorumu sen yap!</p>
+    }
+    else
+    {
+        @foreach (var yorum in Model.Comments.OrderByDescending(c => c.OlusturulmaTarihi))
+        {
+            <div class="yorum-kart">
+                <div class="yorum-ust">
+                    <span class="yorum-kullanici">👤 @yorum.User.Ad @yorum.User.Soyad</span>
+                    <span class="yorum-tarih">@yorum.OlusturulmaTarihi.ToString("dd MMM yyyy HH:mm")</span>
+                </div>
+                <p class="yorum-icerik">@yorum.Icerik</p>
+            </div>
+        }
+    }
 </div>
 
 @section Scripts {

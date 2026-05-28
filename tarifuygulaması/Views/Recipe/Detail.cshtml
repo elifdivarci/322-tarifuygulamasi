@@ -1,0 +1,106 @@
+@model tarifuygulaması.Models.Recipe
+
+@{
+    ViewData["Title"] = Model.Ad;
+}
+
+<div class="row mt-4">
+
+    <div class="col-md-6">
+        <p class="kategori-etiket">@Model.Category.Ad</p>
+        <h1 class="tarif-baslik">@Model.Ad</h1>
+        <p class="tarif-aciklama">@Model.Aciklama</p>
+
+
+        <div class="row g-2 mb-4">
+            <div class="col-6">
+                <div class="bilgi-kutu">
+                    ⏱ <strong>Hazırlama</strong><br />
+                    @Model.HazirlamaSuresi dakika
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="bilgi-kutu">
+                    🔥 <strong>Pişirme</strong><br />
+                    @Model.PisirmeSuresi dakika
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="bilgi-kutu">
+                    🍽️ <strong>Kategori</strong><br />
+                    @Model.Category.Ad
+                </div>
+            </div>
+         
+            <div class="col-6">
+                <div class="bilgi-kutu">
+                    👤 <strong>Kişi Sayısı</strong><br />
+                    <div class="kisi-ayarlayici">
+                        <button onclick="kisiAzalt()" id="btnAzalt">−</button>
+                        <span id="kisiSayisi">@Model.KisiSayisi</span>
+                        <button onclick="kisiArtir()" id="btnArtir">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+ 
+        <h4 class="mb-3">🛒 Malzemeler</h4>
+        <ul class="malzeme-liste" id="malzemeListe">
+            @foreach (var malzeme in Model.Ingredients)
+            {
+                <li data-orijinal="@malzeme.Miktar">
+                    <span class="malzeme-ad">@malzeme.Ad</span>
+                    <span class="malzeme-miktar">@malzeme.Miktar</span>
+                </li>
+            }
+        </ul>
+    </div>
+
+
+    <div class="col-md-6">
+        <img src="@Model.GorselUrl" alt="@Model.Ad"
+             onerror="this.src='/images/default.jpg'"
+             class="tarif-detay-gorsel" />
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const baseKisi = @Model.KisiSayisi;
+    let mevcutKisi = baseKisi;
+
+    function guncelle() {
+        document.getElementById("kisiSayisi").textContent = mevcutKisi;
+        document.getElementById("btnAzalt").disabled = mevcutKisi <= 1;
+        document.getElementById("btnArtir").disabled = mevcutKisi >= 10;
+
+        const satirlar = document.querySelectorAll("#malzemeListe li");
+        satirlar.forEach(satir => {
+            const orijinal = satir.getAttribute("data-orijinal");
+            const span = satir.querySelector(".malzeme-miktar");
+            span.textContent = hesapla(orijinal, mevcutKisi, baseKisi);
+        });
+    }
+
+    function hesapla(orijinalMetin, yeniKisi, baseKisi) {
+       
+        return orijinalMetin.replace(/(\d+([.,]\d+)?)/g, function(eslesme) {
+            const sayi = parseFloat(eslesme.replace(",", "."));
+            const yeni = (sayi / baseKisi) * yeniKisi;
+       
+            return Number.isInteger(yeni) ? yeni : yeni.toFixed(1);
+        });
+    }
+
+    function kisiAzalt() {
+        if (mevcutKisi > 1) { mevcutKisi--; guncelle(); }
+    }
+
+    function kisiArtir() {
+        if (mevcutKisi < 10) { mevcutKisi++; guncelle(); }
+    }
+    
+    guncelle();
+</script>
+}

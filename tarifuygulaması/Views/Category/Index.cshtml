@@ -1,0 +1,30 @@
+@model tarifuygulaması.Models.Category
+
+@{
+    ViewData["Title"] = Model.Ad;
+}
+
+<h2 class="kategori-baslik mt-3">@Model.Ad</h2>
+
+@if (!Model.Recipes.Any())
+{
+    <p class="text-center text-muted mt-4">Bu kategoride henüz tarif bulunmuyor.</p>
+}
+else
+{
+    <div class="row g-3 mt-2">
+        @foreach (var tarif in Model.Recipes)
+        {
+            <div class="col-6 col-md-3">
+                <a class="tarif-kart" asp-controller="Recipe" asp-action="Detail" asp-route-id="@tarif.Id">
+                    <img src="@tarif.GorselUrl" alt="@tarif.Ad"
+                         onerror="this.src='/images/default.jpg'" />
+                    <div class="tarif-kart-body">
+                        <h5>@tarif.Ad</h5>
+                        <p>⏱ @(tarif.HazirlamaSuresi + tarif.PisirmeSuresi) dk &nbsp;|&nbsp; 👤 @tarif.KisiSayisi kişilik</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,137 @@
+@model tarifuygulaması.Models.RecipeCreateViewModel
+@{
+    ViewData["Title"] = "Tarif Ekle";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-7">
+        <div class="auth-kart">
+            <h2 class="mb-4">🍳 Yeni Tarif Ekle</h2>
+
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label>Tarif Adı</label>
+                    <input asp-for="Ad" class="form-control" placeholder="Örn: Vişneli Brownie" />
+                    <span asp-validation-for="Ad" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label>Açıklama</label>
+                    <textarea asp-for="Aciklama" class="form-control" rows="3"
+                              placeholder="Tarifinizi kısaca açıklayın..."></textarea>
+                    <span asp-validation-for="Aciklama" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label>Kategori</label>
+                        <select asp-for="CategoryId" asp-items="ViewBag.Kategoriler" class="form-select">
+                            <option value="">-- Seçiniz --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Hazırlama (dk)</label>
+                        <input asp-for="HazirlamaSuresi" type="number" class="form-control" min="0" />
+                        <span asp-validation-for="HazirlamaSuresi" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Pişirme (dk)</label>
+                        <input asp-for="PisirmeSuresi" type="number" class="form-control" min="0" />
+                        <span asp-validation-for="PisirmeSuresi" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label>Kişi Sayısı</label>
+                        <input asp-for="KisiSayisi" type="number" class="form-control" min="1" max="20" />
+                        <span asp-validation-for="KisiSayisi" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-8">
+                        <label>Tarif Görseli</label>
+                        <input asp-for="Gorsel" type="file" class="form-control" accept="image/*" />
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="fw-bold">🛒 Malzemeler</label>
+                    <div id="malzemeler">
+                        @for (int i = 0; i < 3; i++)
+                        {
+                            <div class="malzeme-satir row g-2 mb-2">
+                                <div class="col-6">
+                                    <input type="text" name="MalzemeAd" class="form-control" placeholder="Malzeme adı"/>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" name="MalzemeMiktar" class="form-control" placeholder="Miktar (örn: 2 su bardağı)"/>
+                                </div>
+                                <div class="col-1 d-flex align-items-center">
+                                    <button type="button" class="malzeme-sil-btn" onclick="malzemeSil(this)">✕</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm mt-1"
+                            onclick="malzemeEkle()">+ Malzeme Ekle</button>
+                </div>
+
+                <button type="submit" class="btn auth-btn w-100 mt-2">Tarifi Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function malzemeEkle() {
+        const div = document.createElement("div");
+        div.className = "malzeme-satir row g-2 mb-2";
+        div.innerHTML = `
+            <div class="col-6">
+                <input type="text" name="MalzemeAd" class="form-control" placeholder="Malzeme adı" />
+            </div>
+            <div class="col-5">
+                <input type="text" name="MalzemeMiktar" class="form-control" placeholder="Miktar (örn: 2 su bardağı)" />
+            </div>
+            <div class="col-1 d-flex align-items-center">
+                <button type="button" class="malzeme-sil-btn" onclick="malzemeSil(this)">✕</button>
+            </div>`;
+        document.getElementById("malzemeler").appendChild(div);
+    }
+
+    function malzemeSil(btn) {
+        const satirlar = document.querySelectorAll(".malzeme-satir");
+        if (satirlar.length > 3) {
+            btn.closest(".malzeme-satir").remove();
+        } else {
+            alert("En az 3 malzeme girilmelidir.");
+        }
+    }
+
+    document.querySelector("form").addEventListener("submit", function(e) {
+        const malzemeAdlari = document.querySelectorAll("input[name='MalzemeAd']");
+        const malzemeMiktarlari = document.querySelectorAll("input[name='MalzemeMiktar']");
+
+        const doluMalzeme = Array.from(malzemeAdlari).filter(i => i.value.trim() !== "");
+        if (doluMalzeme.length < 3) {
+            e.preventDefault();
+            alert("En az 3 malzeme girmelisiniz.");
+            return;
+        }
+        
+        let miktarEksik = false;
+        malzemeAdlari.forEach((ad, index) => {
+            if (ad.value.trim() !== "" && malzemeMiktarlari[index].value.trim() === "") {
+                miktarEksik = true;
+            }
+        });
+
+        if (miktarEksik) {
+            e.preventDefault();
+            alert("Lütfen tüm malzemelerin miktarını giriniz.");
+            return;
+        }
+});
+</script>
+}

@@ -64,6 +64,21 @@ namespace tarifuygulaması.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Profile()
+        {
+            if (HttpContext.Session.GetString("UserEmail") == null)
+                return RedirectToAction("Login");
+
+            int userId = (int)HttpContext.Session.GetInt32("UserId");
+
+            var user = await _context.Users
+                .Include(u => u.Recipes)
+                .ThenInclude(r => r.Category)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            return View(user);
+        }
+        
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {

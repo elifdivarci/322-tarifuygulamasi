@@ -1,0 +1,51 @@
+@model tarifuygulaması.Models.User
+@{
+    ViewData["Title"] = "Profilim";
+}
+
+<div class="mt-4">
+    <div class="profil-baslik mb-4">
+        <h2>👤 @Model.Ad @Model.Soyad</h2>
+        <p class="text-muted">@Model.Email</p>
+    </div>
+
+    <h4 class="kategori-baslik">Eklediğim Tarifler (@Model.Recipes.Count)</h4>
+
+    @if (!Model.Recipes.Any())
+    {
+        <p class="text-muted text-center mt-3">Henüz tarif eklemediniz.</p>
+        <div class="text-center mt-2">
+            <a asp-controller="Recipe" asp-action="Create" class="btn auth-btn">
+                + İlk Tarifinizi Ekleyin
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3 mt-2">
+            @foreach (var tarif in Model.Recipes)
+            {
+                <div class="col-6 col-md-3 position-relative">
+                    <a class="tarif-kart" asp-controller="Recipe"
+                       asp-action="Detail" asp-route-id="@tarif.Id">
+                        <img src="@tarif.GorselUrl" alt="@tarif.Ad"
+                             onerror="this.src='/images/default.jpg'" />
+                        <div class="tarif-kart-body">
+                            <h5>@tarif.Ad</h5>
+                            <p>📂 @tarif.Category.Ad</p>
+                            <p>⏱ @(tarif.HazirlamaSuresi + tarif.PisirmeSuresi) dk</p>
+                        </div>
+                    </a>
+                    <form method="post" asp-controller="Recipe" asp-action="TarifSil"
+                          style="position:absolute; top:8px; right:8px;">
+                        <input type="hidden" name="id" value="@tarif.Id" />
+                        <button type="submit" class="tarif-sil-btn"
+                                onclick="return confirm('Bu tarifi silmek istediğinize emin misiniz?')">
+                            🗑️
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+</div>

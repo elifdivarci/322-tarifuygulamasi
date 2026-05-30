@@ -42,6 +42,16 @@
                     </div>
                 </div>
             </div>
+            
+            @if (Model.User != null)
+            {
+                <div class="col-12">
+                    <div class="bilgi-kutu">
+                        👨‍🍳 <strong>Tarifi Ekleyen</strong><br />
+                        @Model.User.Ad @Model.User.Soyad
+                    </div>
+                </div>
+            }
         </div>
 
  
@@ -100,7 +110,20 @@
             <div class="yorum-kart">
                 <div class="yorum-ust">
                     <span class="yorum-kullanici">👤 @yorum.User.Ad @yorum.User.Soyad</span>
-                    <span class="yorum-tarih">@yorum.OlusturulmaTarihi.ToString("dd MMM yyyy HH:mm")</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="yorum-tarih">@yorum.OlusturulmaTarihi.ToString("dd MMM yyyy HH:mm")</span>
+                        @if (Context.Session.GetInt32("UserId") == yorum.UserId)
+                        {
+                            <form method="post" asp-controller="Recipe" asp-action="YorumSil">
+                                <input type="hidden" name="yorumId" value="@yorum.Id" />
+                                <input type="hidden" name="recipeId" value="@Model.Id" />
+                                <button type="submit" class="yorum-sil-btn"
+                                        onclick="return confirm('Yorumu silmek istediğinize emin misiniz?')">
+                                    🗑️
+                                </button>
+                            </form>
+                        }
+                    </div>
                 </div>
                 <p class="yorum-icerik">@yorum.Icerik</p>
             </div>

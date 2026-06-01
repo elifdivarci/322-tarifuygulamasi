@@ -1,0 +1,74 @@
+@{
+    ViewData["Title"] = "Ne Yemek Yapsam?";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-7">
+        <div class="auth-kart text-center mb-4">
+            <h2 class="mb-2">Ne Yemek Yapsam?</h2>
+            <p class="text-muted mb-4">
+                Elinizdeki malzemeleri yazın, size uygun tarifleri bulalım!
+            </p>
+
+            <form method="post">
+                <div class="mb-3 text-start">
+                    <label class="fw-bold mb-1">Malzemeleriniz</label>
+                    <input type="text" name="malzemeler"
+                           class="form-control form-control-lg"
+                           placeholder="örn: yumurta, domates, soğan"
+                           value="@ViewBag.Malzemeler" />
+                    <small class="text-muted">Malzemeleri virgülle ayırarak yazın.</small>
+                </div>
+                
+                <div class="mb-3 text-start">
+                    <label class="fw-bold mb-1">Kategori</label>
+                    <select name="categoryId" class="form-select">
+                        <option value="">-- Tüm Kategoriler --</option>
+                        @foreach (var kategori in ViewBag.Kategoriler as List<tarifuygulaması.Models.Category>)
+                        {
+                            <option value="@kategori.Id"
+                                    selected="@(ViewBag.SecilenKategori != null && (int)ViewBag.SecilenKategori == kategori.Id ? "selected" : null)">
+                                @kategori.Ad
+                            </option>
+                        }
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn auth-btn px-5">Tarif Bul 🔍</button>
+            </form>
+        </div>
+        
+        @if (ViewBag.Sonuclar != null)
+        {
+            var sonuclar = ViewBag.Sonuclar as List<tarifuygulaması.Models.Recipe>;
+            if (!sonuclar.Any())
+            {
+                <div class="text-center text-muted mt-3">
+                    <p> Girdiğiniz malzemelere uygun tarif bulunamadı.</p>
+                    <p class="small">Farklı malzemeler deneyebilirsiniz.</p>
+                </div>
+            }
+            else
+            {
+                <h5 class="mb-3">@sonuclar.Count tarif bulundu:</h5>
+                <div class="row g-3">
+                    @foreach (var tarif in sonuclar)
+                    {
+                        <div class="col-6 col-md-4">
+                            <a class="tarif-kart" asp-controller="Recipe"
+                               asp-action="Detail" asp-route-id="@tarif.Id">
+                                <img src="@tarif.GorselUrl" alt="@tarif.Ad"
+                                     onerror="this.src='/images/meal.jpeg'" />
+                                <div class="tarif-kart-body">
+                                    <h5>@tarif.Ad</h5>
+                                    <p>📂 @tarif.Category.Ad</p>
+                                    <p>⏱ @(tarif.HazirlamaSuresi + tarif.PisirmeSuresi) dk</p>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>

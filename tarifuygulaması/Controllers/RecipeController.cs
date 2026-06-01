@@ -122,6 +122,44 @@ namespace tarifuygulaması.Controllers
         
         public IActionResult NeYemekYapsam()
         {
+            ViewBag.Kategoriler = _context.Categories.ToList();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NeYemekYapsam(string malzemeler, int? categoryId)
+        {
+            ViewBag.Kategoriler = _context.Categories.ToList();
+
+            if (string.IsNullOrWhiteSpace(malzemeler))
+                return View();
+
+            var malzemeListesi = malzemeler
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(m => m.Trim().ToLower())
+                .Where(m => m.Length > 0)
+                .ToList();
+
+            if (!malzemeListesi.Any())
+                return View();
+
+            var tarifler = await _context.Recipes
+                .Include(r => r.Category)
+                .Include(r => r.Ingredients)
+                .ToListAsync();
+
+            var sonuclar = tarifler
+                .Where(t => categoryId == null || t.CategoryId == categoryId)
+                .Where(t => malzemeListesi.All(m =>
+                    t.Ingredients.Any(i =>
+                        i.Ad.ToLower().Contains(m) || m.Contains(i.Ad.ToLower())
+                    )
+                ))
+                .ToList();
+
+            ViewBag.Malzemeler = malzemeler;
+            ViewBag.SecilenKategori = categoryId;
+            ViewBag.Sonuclar = sonuclar;
             return View();
         }
         

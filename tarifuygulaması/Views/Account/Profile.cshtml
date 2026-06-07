@@ -47,5 +47,31 @@
                 </div>
             }
         </div>
+        
+        <h4 class="kategori-baslik mt-5"> Favori Tariflerim (@Model.Favorites.Count)</h4>
+
+        @if (!Model.Favorites.Any())
+        {
+            <p class="text-muted text-center mt-3">Henüz favori tarifiniz yok.</p>
+        }
+        else
+        {
+            <div class="row g-3 mt-2">
+                @foreach (var favori in Model.Favorites)
+                {
+                    <div class="col-6 col-md-3">
+                        <a class="tarif-kart" asp-controller="Recipe"
+                           asp-action="Detail" asp-route-id="@favori.Recipe.Id">
+                            <img src="@favori.Recipe.GorselUrl" alt="@favori.Recipe.Ad"
+                                 onerror="this.src='/images/meal.jpeg'" />
+                            <div class="tarif-kart-body">
+                                <h5>@favori.Recipe.Ad</h5>
+                                <p>📂 @favori.Recipe.Category.Ad</p>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
     }
 </div>

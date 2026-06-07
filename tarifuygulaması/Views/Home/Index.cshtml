@@ -2,14 +2,13 @@
 
 @{
     ViewData["Title"] = "Ana Sayfa";
+    var favoriIdler = ViewBag.FavoriIdler as List<int> ?? new List<int>();
 }
-
 
 <div class="hero-alan text-center py-5 mb-4">
     <h1>🍽️ Lezzetli Tarifler</h1>
     <p class="lead">Binlerce tarif, tek bir yerde!</p>
 </div>
-
 
 @foreach (var kategori in Model)
 {
@@ -18,15 +17,29 @@
     <div class="row g-3 mb-4">
         @foreach (var tarif in kategori.Recipes)
         {
+            bool favori = favoriIdler.Contains(tarif.Id);
             <div class="col-6 col-md-3">
-                <a class="tarif-kart" asp-controller="Recipe" asp-action="Detail" asp-route-id="@tarif.Id">
-                    <img src="@tarif.GorselUrl" alt="@tarif.Ad"
-                         onerror="this.src='/images/default.jpg'" />
-                    <div class="tarif-kart-body">
-                        <h5>@tarif.Ad</h5>
-                        <p>⏱ @(tarif.HazirlamaSuresi + tarif.PisirmeSuresi) dk &nbsp;|&nbsp; 👤 @tarif.KisiSayisi kişilik</p>
-                    </div>
-                </a>
+                <div class="position-relative">
+                    <a class="tarif-kart" asp-controller="Recipe"
+                       asp-action="Detail" asp-route-id="@tarif.Id">
+                        <div class="position-relative">
+                            <img src="@tarif.GorselUrl" alt="@tarif.Ad"
+                                 onerror="this.src='/images/meal.jpeg'" />
+                            <form method="post" asp-controller="Favorite" asp-action="Toggle" class="kalp-form">
+                                <input type="hidden" name="recipeId" value="@tarif.Id" />
+                                <input type="hidden" name="returnUrl" value="/" />
+                                <button type="submit" class="kalp-btn"
+                                        onclick="@(Context.Session.GetString("UserEmail") == null ? "event.preventDefault(); window.location='/Account/Login'" : "")">
+                                    @(favori ? "❤️" : "🤍")
+                                </button>
+                            </form>
+                        </div>
+                        <div class="tarif-kart-body">
+                            <h5>@tarif.Ad</h5>
+                            <p>⏱ @(tarif.HazirlamaSuresi + tarif.PisirmeSuresi) dk &nbsp;|&nbsp; 👤 @tarif.KisiSayisi kişilik</p>
+                        </div>
+                    </a>
+                </div>
             </div>
         }
     </div>

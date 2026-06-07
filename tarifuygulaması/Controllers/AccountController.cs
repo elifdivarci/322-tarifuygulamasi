@@ -74,11 +74,13 @@ namespace tarifuygulaması.Controllers
             var user = await _context.Users
                 .Include(u => u.Recipes)
                 .ThenInclude(r => r.Category)
+                .Include(u => u.Favorites)
+                .ThenInclude(f => f.Recipe)
+                .ThenInclude(r => r.Category)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             return View(user);
         }
-        
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {

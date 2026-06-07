@@ -82,6 +82,30 @@ namespace tarifuygulaması.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("tarifuygulaması.Models.Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("EklenmeTarihi")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Favorites");
+                });
+
             modelBuilder.Entity("tarifuygulaması.Models.Ingredient", b =>
                 {
                     b.Property<int>("Id")
@@ -960,6 +984,25 @@ namespace tarifuygulaması.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("tarifuygulaması.Models.Favorite", b =>
+                {
+                    b.HasOne("tarifuygulaması.Models.Recipe", "Recipe")
+                        .WithMany("Favorites")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("tarifuygulaması.Models.User", "User")
+                        .WithMany("Favorites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("tarifuygulaması.Models.Ingredient", b =>
                 {
                     b.HasOne("tarifuygulaması.Models.Recipe", "Recipe")
@@ -1008,6 +1051,8 @@ namespace tarifuygulaması.Migrations
                 {
                     b.Navigation("Comments");
 
+                    b.Navigation("Favorites");
+
                     b.Navigation("Ingredients");
                 });
 
@@ -1019,6 +1064,8 @@ namespace tarifuygulaması.Migrations
             modelBuilder.Entity("tarifuygulaması.Models.User", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Favorites");
 
                     b.Navigation("Recipes");
                 });

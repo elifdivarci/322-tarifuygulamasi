@@ -334,3 +334,42 @@
 .tarif-sil-btn:hover {
     background: #c0392b;
 }
+
+.kalp-form {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+}
+
+.kalp-btn {
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.kalp-btn:hover {
+    transform: scale(1.15);
+}
+
+.kalp-detay-btn {
+    background: white;
+    border: 2px solid #B8311A;
+    color: #B8311A;
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+}
+
+.kalp-detay-btn:hover {
+    background: #B8311A;
+    color: white;
+}

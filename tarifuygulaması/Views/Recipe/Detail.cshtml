@@ -10,6 +10,14 @@
         <p class="kategori-etiket">@Model.Category.Ad</p>
         <h1 class="tarif-baslik">@Model.Ad</h1>
         <p class="tarif-aciklama">@Model.Aciklama</p>
+        
+        <form method="post" asp-controller="Favorite" asp-action="Toggle">
+            <input type="hidden" name="recipeId" value="@Model.Id" />
+            <input type="hidden" name="returnUrl" value="/Recipe/Detail/@Model.Id" />
+            <button type="submit" class="kalp-detay-btn">
+                @(ViewBag.Favori ? "❤️ Favorilerden Çıkar" : "🤍 Favorilere Ekle")
+            </button>
+        </form>
 
 
         <div class="row g-2 mb-4">

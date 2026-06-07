@@ -28,6 +28,15 @@ namespace tarifuygulaması.Controllers
             if (tarif == null)
                 return NotFound();
 
+            bool favori = false;
+            if (HttpContext.Session.GetString("UserEmail") != null)
+            {
+                int userId = (int)HttpContext.Session.GetInt32("UserId");
+                favori = await _context.Favorites
+                    .AnyAsync(f => f.UserId == userId && f.RecipeId == id);
+            }
+
+            ViewBag.Favori = favori;
             return View(tarif);
         }
 
